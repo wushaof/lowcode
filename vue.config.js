@@ -38,6 +38,7 @@ module.exports = {
   devServer: {
     overlay: false
   },
+  lintOnSave: false,
   productionSourceMap: false,
   configureWebpack: {
     externals: {

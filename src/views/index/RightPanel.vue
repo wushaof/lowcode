@@ -84,7 +84,10 @@
           <el-form-item v-if="activeData.style&&activeData.style.width!==undefined" label="组件宽度">
             <el-input v-model="activeData.style.width" placeholder="请输入组件宽度" clearable />
           </el-form-item>
-          <el-form-item v-if="activeData.__vModel__!==undefined" label="默认值">
+          <el-form-item
+            v-if="activeData.__vModel__!==undefined && 
+            !['el-table'].includes(activeData.__config__.tag)"
+          label="默认值">
             <el-input
               :value="setDefaultValue(activeData.__config__.defaultValue)"
               placeholder="请输入默认值"
@@ -153,7 +156,7 @@
             <el-input-number v-model="activeData.max" placeholder="最大值" />
           </el-form-item>
           <el-form-item v-if="activeData.height!==undefined" label="组件高度">
-            <el-input-number v-model="activeData.height" placeholder="高度" @input="changeRenderKey" />
+            <el-input-number v-model="activeData.height" placeholder="高度"  />
           </el-form-item>
           <el-form-item v-if="isShowStep" label="步长">
             <el-input-number v-model="activeData.step" placeholder="步数" />
@@ -344,7 +347,7 @@
 
             <!-- 表格设置 -->
             <template v-if="activeData.__config__.tag === 'el-table'">
-              
+              <TableConfig :data="activeData"/>
             </template>
 
             <el-form-item v-if="activeData.__config__.dataType" label="数据类型">
@@ -663,6 +666,7 @@ import {
   inputComponents, selectComponents, layoutComponents
 } from '@/components/generator/config'
 import { saveFormConf } from '@/utils/db'
+import TableConfig from '../config/TableConfig'
 
 const dateTimeFormat = {
   date: 'yyyy-MM-dd',
@@ -681,7 +685,8 @@ const needRerenderList = ['tinymce']
 export default {
   components: {
     TreeNodeDialog,
-    IconsDialog
+    IconsDialog,
+    TableConfig
   },
   props: ['showField', 'activeData', 'formConf'],
   data() {

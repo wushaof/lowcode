@@ -556,10 +556,11 @@ export const layoutComponents = [
       formId: 101,
       renderKey: 1595761764203,
       componentName: 'row101',
-      showLabel: true,
+      showLabel: false,
       changeTag: true,
       labelWidth: null,
       label: '表格',
+      useOperate: true,
       dataType: 'dynamic',
       method: 'get',
       dataPath: 'list',
@@ -604,9 +605,9 @@ export const layoutComponents = [
                 renderKey: 1595779809901
               },
               __slot__: {
-                default: '主要按钮'
+                default: '主要按钮',
               },
-              type: 'primary',
+              type: 'text',
               icon: 'el-icon-search',
               round: false,
               size: 'medium'
