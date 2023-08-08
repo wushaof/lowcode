@@ -118,6 +118,7 @@
 </template>
 
 <script>
+import { nanoid } from 'nanoid'
 import draggable from 'vuedraggable'
 import { debounce } from 'throttle-debounce'
 import { saveAs } from 'file-saver'
@@ -142,17 +143,15 @@ import logo from '@/assets/logo.png'
 import CodeTypeDialog from './CodeTypeDialog'
 import DraggableItem from './DraggableItem'
 import {
-  getDrawingList, saveDrawingList, getIdGlobal, saveIdGlobal, getFormConf
+  getDrawingList, saveDrawingList, saveIdGlobal, getFormConf
 } from '@/utils/db'
 import loadBeautifier from '@/utils/loadBeautifier'
 
 let beautifier
-const emptyActiveData = { style: {}, autosize: {} }
 let oldActiveId
 let tempActiveData
 const drawingListInDB = getDrawingList()
 const formConfInDB = getFormConf()
-const idGlobal = getIdGlobal()
 
 export default {
   components: {
@@ -167,7 +166,6 @@ export default {
   data() {
     return {
       logo,
-      idGlobal,
       formConf,
       inputComponents,
       selectComponents,
@@ -224,16 +222,9 @@ export default {
     drawingList: {
       handler(val) {
         this.saveDrawingListDebounce(val)
-        if (val.length === 0) this.idGlobal = 100
       },
       deep: true
     },
-    idGlobal: {
-      handler(val) {
-        this.saveIdGlobalDebounce(val)
-      },
-      immediate: true
-    }
   },
   mounted() {
     if (Array.isArray(drawingListInDB) && drawingListInDB.length > 0) {
@@ -316,7 +307,7 @@ export default {
       if (obj.from !== obj.to) {
         this.fetchData(tempActiveData)
         this.activeData = tempActiveData
-        this.activeId = this.idGlobal
+        this.activeId = tempActiveData.__config__.formId
       }
     },
     addComponent(item) {
@@ -336,12 +327,13 @@ export default {
     },
     createIdAndKey(item) {
       const config = item.__config__
-      config.formId = ++this.idGlobal
-      config.renderKey = `${config.formId}${+new Date()}` // 改变renderKey后可以实现强制更新组件
+      const id = nanoid(5)
+      config.formId = (config.compType || '') + id
+      config.renderKey = `${id}${+new Date()}` // 改变renderKey后可以实现强制更新组件
       if (config.layout === 'colFormItem') {
-        item.__vModel__ = `field${this.idGlobal}`
+        item.__vModel__ = `field${id}`
       } else if (config.layout === 'rowFormItem') {
-        config.componentName = `row${this.idGlobal}`
+        config.componentName = `row${id}`
         !Array.isArray(config.children) && (config.children = [])
         delete config.label // rowFormItem无需配置label属性
       }
@@ -377,7 +369,6 @@ export default {
       this.$confirm('确定要清空所有组件吗？', '提示', { type: 'warning' }).then(
         () => {
           this.drawingList = []
-          this.idGlobal = 100
         }
       )
     },

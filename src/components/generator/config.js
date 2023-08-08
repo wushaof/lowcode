@@ -1,3 +1,4 @@
+import { nanoid } from 'nanoid'
 // 表单属性【右面板】
 export const formConf = {
   formRef: 'elForm',
@@ -12,12 +13,44 @@ export const formConf = {
   formBtns: true
 }
 
+// 表格操作列按钮
+export const tableOperateButton = {
+  __config__: {
+    tag: 'el-button',
+    tagIcon: 'button',
+    layout: 'raw',
+    renderKey: nanoid(5)
+  },
+  __slot__: {
+    default: '按钮',
+  },
+  type: 'text',
+  icon: 'el-icon-edit',
+  round: false,
+  size: 'medium'
+}
+// 表格操作列
+export const tableOperateList = {
+  __config__: {
+    layout: 'raw',
+    tag: 'el-table-column',
+    compType: 'tableColumn',
+    renderKey: nanoid(5),
+    operate: true, // 标识为操作列
+    children: [
+      tableOperateButton
+    ]
+  },
+  label: '操作'
+}
+
 // 输入型组件 【左面板】
 export const inputComponents = [
   {
     // 组件的自定义配置
     __config__: {
       label: '单行文本',
+      compType: 'text',
       labelWidth: null,
       showLabel: true,
       changeTag: true,
@@ -27,7 +60,6 @@ export const inputComponents = [
       required: true,
       layout: 'colFormItem',
       span: 24,
-      document: 'https://element.eleme.cn/#/zh-CN/component/input',
       // 正则校验规则
       regList: []
     },
@@ -53,6 +85,7 @@ export const inputComponents = [
       labelWidth: null,
       showLabel: true,
       tag: 'el-input',
+      compType: 'textarea',
       tagIcon: 'textarea',
       defaultValue: undefined,
       required: true,
@@ -60,7 +93,6 @@ export const inputComponents = [
       span: 24,
       regList: [],
       changeTag: true,
-      document: 'https://element.eleme.cn/#/zh-CN/component/input'
     },
     type: 'textarea',
     placeholder: '请输入',
@@ -79,6 +111,7 @@ export const inputComponents = [
       label: '密码',
       showLabel: true,
       labelWidth: null,
+      compType: 'text',
       changeTag: true,
       tag: 'el-input',
       tagIcon: 'password',
@@ -87,7 +120,6 @@ export const inputComponents = [
       span: 24,
       required: true,
       regList: [],
-      document: 'https://element.eleme.cn/#/zh-CN/component/input'
     },
     __slot__: {
       prepend: '',
@@ -108,6 +140,7 @@ export const inputComponents = [
     __config__: {
       label: '计数器',
       showLabel: true,
+      compType: 'number',
       changeTag: true,
       labelWidth: null,
       tag: 'el-input-number',
@@ -117,7 +150,6 @@ export const inputComponents = [
       layout: 'colFormItem',
       required: true,
       regList: [],
-      document: 'https://element.eleme.cn/#/zh-CN/component/input-number'
     },
     placeholder: '',
     min: undefined,
@@ -132,6 +164,7 @@ export const inputComponents = [
     __config__: {
       label: '编辑器',
       showLabel: true,
+      compType: 'richText',
       changeTag: true,
       labelWidth: null,
       tag: 'tinymce',
@@ -141,7 +174,6 @@ export const inputComponents = [
       layout: 'colFormItem',
       required: true,
       regList: [],
-      document: 'http://tinymce.ax-z.cn'
     },
     placeholder: '请输入',
     height: 300, // 编辑器高度
@@ -156,6 +188,7 @@ export const selectComponents = [
       label: '下拉选择',
       showLabel: true,
       labelWidth: null,
+      compType: 'select',
       tag: 'el-select',
       tagIcon: 'select',
       layout: 'colFormItem',
@@ -163,7 +196,6 @@ export const selectComponents = [
       required: true,
       regList: [],
       changeTag: true,
-      document: 'https://element.eleme.cn/#/zh-CN/component/select'
     },
     __slot__: {
       options: [{
@@ -189,6 +221,7 @@ export const selectComponents = [
       dataPath: 'list',
       dataConsumer: 'options',
       showLabel: true,
+      compType: 'cascader',
       labelWidth: null,
       tag: 'el-cascader',
       tagIcon: 'cascader',
@@ -199,7 +232,6 @@ export const selectComponents = [
       required: true,
       regList: [],
       changeTag: true,
-      document: 'https://element.eleme.cn/#/zh-CN/component/cascader'
     },
     options: [{
       id: 1,
@@ -231,6 +263,7 @@ export const selectComponents = [
     __config__: {
       label: '单选框组',
       labelWidth: null,
+      compType: 'radioGroup',
       showLabel: true,
       tag: 'el-radio-group',
       tagIcon: 'radio',
@@ -242,7 +275,6 @@ export const selectComponents = [
       regList: [],
       required: true,
       border: false,
-      document: 'https://element.eleme.cn/#/zh-CN/component/radio'
     },
     __slot__: {
       options: [{
@@ -261,6 +293,7 @@ export const selectComponents = [
     __config__: {
       label: '多选框组',
       tag: 'el-checkbox-group',
+      compType: 'checkGroup',
       tagIcon: 'checkbox',
       defaultValue: [],
       span: 24,
@@ -272,7 +305,6 @@ export const selectComponents = [
       regList: [],
       changeTag: true,
       border: false,
-      document: 'https://element.eleme.cn/#/zh-CN/component/checkbox'
     },
     __slot__: {
       options: [{
@@ -293,6 +325,7 @@ export const selectComponents = [
     __config__: {
       label: '开关',
       tag: 'el-switch',
+      compType: 'switch',
       tagIcon: 'switch',
       defaultValue: false,
       span: 24,
@@ -302,7 +335,6 @@ export const selectComponents = [
       required: true,
       regList: [],
       changeTag: true,
-      document: 'https://element.eleme.cn/#/zh-CN/component/switch'
     },
     style: {},
     disabled: false,
@@ -317,6 +349,7 @@ export const selectComponents = [
     __config__: {
       label: '滑块',
       tag: 'el-slider',
+      compType: 'slider',
       tagIcon: 'slider',
       defaultValue: null,
       span: 24,
@@ -326,7 +359,6 @@ export const selectComponents = [
       required: true,
       regList: [],
       changeTag: true,
-      document: 'https://element.eleme.cn/#/zh-CN/component/slider'
     },
     disabled: false,
     min: 0,
@@ -339,6 +371,7 @@ export const selectComponents = [
     __config__: {
       label: '时间选择',
       tag: 'el-time-picker',
+      compType: 'timePicker',
       tagIcon: 'time',
       defaultValue: null,
       span: 24,
@@ -348,7 +381,6 @@ export const selectComponents = [
       required: true,
       regList: [],
       changeTag: true,
-      document: 'https://element.eleme.cn/#/zh-CN/component/time-picker'
     },
     placeholder: '请选择',
     style: { width: '100%' },
@@ -364,6 +396,7 @@ export const selectComponents = [
     __config__: {
       label: '时间范围',
       tag: 'el-time-picker',
+      compType: 'timeRange',
       tagIcon: 'time-range',
       span: 24,
       showLabel: true,
@@ -373,7 +406,6 @@ export const selectComponents = [
       required: true,
       regList: [],
       changeTag: true,
-      document: 'https://element.eleme.cn/#/zh-CN/component/time-picker'
     },
     style: { width: '100%' },
     disabled: false,
@@ -389,6 +421,7 @@ export const selectComponents = [
     __config__: {
       label: '日期选择',
       tag: 'el-date-picker',
+      compType: 'datePicker',
       tagIcon: 'date',
       defaultValue: null,
       showLabel: true,
@@ -398,7 +431,6 @@ export const selectComponents = [
       required: true,
       regList: [],
       changeTag: true,
-      document: 'https://element.eleme.cn/#/zh-CN/component/date-picker'
     },
     placeholder: '请选择',
     type: 'date',
@@ -413,6 +445,7 @@ export const selectComponents = [
     __config__: {
       label: '日期范围',
       tag: 'el-date-picker',
+      compType: 'dateRange',
       tagIcon: 'date-range',
       defaultValue: null,
       span: 24,
@@ -440,6 +473,7 @@ export const selectComponents = [
       label: '评分',
       tag: 'el-rate',
       tagIcon: 'rate',
+      compType: 'rate',
       defaultValue: 0,
       span: 24,
       showLabel: true,
@@ -461,6 +495,7 @@ export const selectComponents = [
     __config__: {
       label: '颜色选择',
       tag: 'el-color-picker',
+      compType: 'color',
       tagIcon: 'color',
       span: 24,
       defaultValue: null,
@@ -482,6 +517,7 @@ export const selectComponents = [
       label: '上传',
       tag: 'el-upload',
       tagIcon: 'upload',
+      compType: 'upload',
       layout: 'colFormItem',
       defaultValue: null,
       showLabel: true,
@@ -515,6 +551,7 @@ export const layoutComponents = [
     __config__: {
       layout: 'rowFormItem',
       tagIcon: 'row',
+      compType: 'row',
       label: '行容器',
       layoutTree: true,
       document: 'https://element.eleme.cn/#/zh-CN/component/layout#row-attributes'
@@ -527,13 +564,13 @@ export const layoutComponents = [
     __config__: {
       label: '按钮',
       showLabel: true,
+      compType: 'button',
       changeTag: true,
       labelWidth: null,
       tag: 'el-button',
       tagIcon: 'button',
       span: 24,
       layout: 'colFormItem',
-      document: 'https://element.eleme.cn/#/zh-CN/component/button'
     },
     __slot__: {
       default: '主要按钮'
@@ -554,13 +591,17 @@ export const layoutComponents = [
       document: 'https://element.eleme.cn/#/zh-CN/component/table',
       span: 24,
       formId: 101,
-      renderKey: 1595761764203,
+      renderKey: nanoid(5),
+      compType: 'table',
       componentName: 'row101',
       showLabel: false,
       changeTag: true,
       labelWidth: null,
       label: '表格',
       useOperate: true,
+      btnList: [{
+        name: '', icon: ''
+      }],
       dataType: 'dynamic',
       method: 'get',
       dataPath: 'list',
@@ -570,52 +611,27 @@ export const layoutComponents = [
         __config__: {
           layout: 'raw',
           tag: 'el-table-column',
-          renderKey: 15957617660153
+          renderKey: nanoid(5)
         },
         prop: 'date',
-        label: '日期'
+        label: '日期（示例）'
       }, {
         __config__: {
           layout: 'raw',
           tag: 'el-table-column',
-          renderKey: 15957617660152
+          renderKey: nanoid(5)
         },
         prop: 'address',
-        label: '地址'
+        label: '地址（示例）'
       }, {
         __config__: {
           layout: 'raw',
           tag: 'el-table-column',
-          renderKey: 15957617660151
+          renderKey: nanoid(5)
         },
         prop: 'name',
-        label: '名称'
-      }, {
-        __config__: {
-          layout: 'raw',
-          tag: 'el-table-column',
-          renderKey: 1595774496335,
-          children: [
-            {
-              __config__: {
-                label: '按钮',
-                tag: 'el-button',
-                tagIcon: 'button',
-                layout: 'raw',
-                renderKey: 1595779809901
-              },
-              __slot__: {
-                default: '主要按钮',
-              },
-              type: 'text',
-              icon: 'el-icon-search',
-              round: false,
-              size: 'medium'
-            }
-          ]
-        },
-        label: '操作'
-      }]
+        label: '名称（示例）'
+      }, tableOperateList]
     },
     data: [],
     directives: [{
