@@ -34,7 +34,7 @@ function mountSlotFiles(h, confClone, children) {
   }
 }
 
-function emitEvents(confClone) {
+function emitEvents(confClone) {//'current-change'
   ['on', 'nativeOn'].forEach(attr => {
     const eventKeyList = Object.keys(confClone[attr] || {})
     eventKeyList.forEach(key => {
@@ -49,16 +49,25 @@ function emitEvents(confClone) {
 function buildDataObject(confClone, dataObject) {
   Object.keys(confClone).forEach(key => {
     const val = confClone[key]
+
+    // 表格分页
+    if (confClone.__config__.compType === 'pagination') {
+
+      confClone.on['current-change'] = (v) => {
+        console.log('8888', v)
+        this.$emit('currentChange', v)
+      }
+    }
     if (key === '__vModel__') {
       vModel.call(this, dataObject, confClone.__config__.defaultValue)
     } else if (dataObject[key] !== undefined) {
       if (dataObject[key] === null
         || dataObject[key] instanceof RegExp
         || ['boolean', 'string', 'number', 'function'].includes(typeof dataObject[key])) {
-        dataObject[key] = val
-      } else if (Array.isArray(dataObject[key])) {
-        dataObject[key] = [...dataObject[key], ...val]
-      } else {
+          dataObject[key] = val
+        } else if (Array.isArray(dataObject[key])) {
+          dataObject[key] = [...dataObject[key], ...val]
+        } else {
         dataObject[key] = { ...dataObject[key], ...val }
       }
     } else {
@@ -113,7 +122,7 @@ export default {
 
     // 将字符串类型的事件，发送为消息
     emitEvents.call(this, confClone)
-
+    // console.error(deepClone(confClone))
     // 将json表单配置转化为vue render可以识别的 “数据对象（dataObject）”
     buildDataObject.call(this, confClone, dataObject)
     return h(this.conf.__config__.tag, dataObject, children)

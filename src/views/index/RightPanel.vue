@@ -1,36 +1,17 @@
 <template>
   <div class="right-board">
     <el-tabs v-model="currentTab" class="center-tabs">
-      <el-tab-pane label="组件属性" name="field" />
-      <el-tab-pane label="表单属性" name="form" />
+      <el-tab-pane
+        v-for="(item, index) in tabList"
+        :key="index"
+        :label="item.label"
+        :name="item.name"
+      ></el-tab-pane>
     </el-tabs>
     <div class="field-box">
-      <a class="document-link" target="_blank" :href="documentLink" title="查看组件文档">
-        <i class="el-icon-link" />
-      </a>
       <el-scrollbar class="right-scrollbar">
         <!-- 组件属性 -->
-        <el-form v-show="currentTab==='field' && showField" size="small" label-width="90px">
-          <el-form-item v-if="activeData.__config__.changeTag" label="组件类型">
-            <el-select
-              v-model="activeData.__config__.tagIcon"
-              placeholder="请选择组件类型"
-              :style="{width: '100%'}"
-              @change="tagChange"
-            >
-              <el-option-group v-for="group in tagList" :key="group.label" :label="group.label">
-                <el-option
-                  v-for="item in group.options"
-                  :key="item.__config__.label"
-                  :label="item.__config__.label"
-                  :value="item.__config__.tagIcon"
-                >
-                  <svg-icon class="node-icon" :icon-class="item.__config__.tagIcon" />
-                  <span> {{ item.__config__.label }}</span>
-                </el-option>
-              </el-option-group>
-            </el-select>
-          </el-form-item>
+        <el-form v-if="currentTab==='field' && showField" size="small" label-width="90px">
           <el-form-item v-if="activeData.__vModel__!==undefined" label="字段名">
             <el-input v-model="activeData.__vModel__" placeholder="请输入字段名（v-model）" />
           </el-form-item>
@@ -135,9 +116,9 @@
             label="按钮图标"
           >
             <el-input v-model="activeData['icon']" placeholder="请输入按钮图标名称">
-              <el-button slot="append" icon="el-icon-thumb" @click="openIconsDialog('icon')">
-                选择
-              </el-button>
+            <el-button slot="append" icon="el-icon-thumb" @click="openIconsDialog('icon')">
+              选择
+            </el-button>
             </el-input>
           </el-form-item>
           <el-form-item v-if="activeData.__config__.tag === 'el-cascader'" label="选项分隔符">
@@ -597,58 +578,7 @@
           </template>
         </el-form>
         <!-- 表单属性 -->
-        <el-form v-show="currentTab === 'form'" size="small" label-width="90px">
-          <el-form-item label="表单名">
-            <el-input v-model="formConf.formRef" placeholder="请输入表单名（ref）" />
-          </el-form-item>
-          <el-form-item label="表单模型">
-            <el-input v-model="formConf.formModel" placeholder="请输入数据模型" />
-          </el-form-item>
-          <el-form-item label="校验模型">
-            <el-input v-model="formConf.formRules" placeholder="请输入校验模型" />
-          </el-form-item>
-          <el-form-item label="表单尺寸">
-            <el-radio-group v-model="formConf.size">
-              <el-radio-button label="medium">
-                中等
-              </el-radio-button>
-              <el-radio-button label="small">
-                较小
-              </el-radio-button>
-              <el-radio-button label="mini">
-                迷你
-              </el-radio-button>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item label="标签对齐">
-            <el-radio-group v-model="formConf.labelPosition">
-              <el-radio-button label="left">
-                左对齐
-              </el-radio-button>
-              <el-radio-button label="right">
-                右对齐
-              </el-radio-button>
-              <el-radio-button label="top">
-                顶部对齐
-              </el-radio-button>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item label="标签宽度">
-            <el-input v-model.number="formConf.labelWidth" type="number" placeholder="请输入标签宽度" />
-          </el-form-item>
-          <el-form-item label="栅格间隔">
-            <el-input-number v-model="formConf.gutter" :min="0" placeholder="栅格间隔" />
-          </el-form-item>
-          <el-form-item label="禁用表单">
-            <el-switch v-model="formConf.disabled" />
-          </el-form-item>
-          <el-form-item label="表单按钮">
-            <el-switch v-model="formConf.formBtns" />
-          </el-form-item>
-          <el-form-item label="显示未选中组件边框">
-            <el-switch v-model="formConf.unFocusedComponentBorder" />
-          </el-form-item>
-        </el-form>
+        <FormAttrs v-if="currentTab === 'form'" :formConf="formConf"/>
       </el-scrollbar>
     </div>
 
@@ -658,15 +588,12 @@
 </template>
 
 <script>
-import { isArray } from 'util'
 import TreeNodeDialog from '@/views/index/TreeNodeDialog'
 import { isNumberStr } from '@/utils/index'
 import IconsDialog from './IconsDialog'
-import {
-  inputComponents, selectComponents, layoutComponents
-} from '@/components/generator/config'
 import { saveFormConf } from '@/utils/db'
 import TableConfig from '../config/TableConfig'
+import FormAttrs from '../config/FormAttrs'
 
 const dateTimeFormat = {
   date: 'yyyy-MM-dd',
@@ -681,16 +608,33 @@ const dateTimeFormat = {
 
 // 使changeRenderKey在目标组件改变时可用
 const needRerenderList = ['tinymce']
+// 组件配置
+const getTab = (type) => {
+  const [ label, name ] = type === 'page' ? [ '页面', 'form' ] : ['组件', 'field']
 
+  return [
+    {
+      label: `${label}属性`,
+      name
+    },
+    {
+      label: `${label}事件`,
+      name: 'event'
+    }
+  ]
+}
+// 页面配置
 export default {
   components: {
     TreeNodeDialog,
     IconsDialog,
-    TableConfig
+    TableConfig,
+    FormAttrs,
   },
   props: ['showField', 'activeData', 'formConf'],
   data() {
     return {
+      tabList: getTab(),
       currentTab: 'field',
       currentNode: null,
       dialogVisible: false,
@@ -785,12 +729,6 @@ export default {
     }
   },
   computed: {
-    documentLink() {
-      return (
-        this.activeData.__config__.document
-        || 'https://element.eleme.cn/#/zh-CN/component/installation'
-      )
-    },
     dateOptions() {
       if (
         this.activeData.type !== undefined
@@ -802,18 +740,6 @@ export default {
         return this.dateRangeTypeOptions
       }
       return []
-    },
-    tagList() {
-      return [
-        {
-          label: '输入型组件',
-          options: inputComponents
-        },
-        {
-          label: '选择型组件',
-          options: selectComponents
-        }
-      ]
     },
     activeTag() {
       return this.activeData.__config__.tag
@@ -834,6 +760,10 @@ export default {
         saveFormConf(val)
       },
       deep: true
+    },
+    'activeData.__config__.compType' (type) {
+      this.tabList = getTab(type)
+      this.currentTab = this.tabList[0].name
     }
   },
   methods: {
@@ -904,7 +834,7 @@ export default {
       return val
     },
     onDefaultValueInput(str) {
-      if (isArray(this.activeData.__config__.defaultValue)) {
+      if (Array.isArray(this.activeData.__config__.defaultValue)) {
         // 数组
         this.$set(
           this.activeData.__config__,
@@ -969,11 +899,6 @@ export default {
     },
     setIcon(val) {
       this.activeData[this.currentIconModel] = val
-    },
-    tagChange(tagIcon) {
-      let target = inputComponents.find(item => item.__config__.tagIcon === tagIcon)
-      if (!target) target = selectComponents.find(item => item.__config__.tagIcon === tagIcon)
-      this.$emit('tag-change', target)
     },
     changeRenderKey() {
       if (needRerenderList.includes(this.activeData.__config__.tag)) {

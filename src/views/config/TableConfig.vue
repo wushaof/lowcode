@@ -7,7 +7,7 @@
       >
       </el-switch>
       <br/>
-      <div class="btn-container">
+      <div class="btn-container" v-if="data.__config__.useOperate">
 
         <div class="title">
           <span class="name">按钮名称</span>
@@ -21,7 +21,12 @@
               placeholder="请输入按钮名称"
               class="btn-name"
             />
-            <i class="el-icon-edit"></i>
+            <el-input
+              v-model="item.icon"
+              placeholder="请输入图标"
+              @click.native="clickIcon(item)"
+            />
+            <!-- <i class="cursor-point" :class="item.icon" @click="clickIcon(item)"></i> -->
             <i class="el-icon-delete" @click="deleteBtn(index)"></i>
           </div>
         </template>
@@ -30,27 +35,41 @@
       </div>
     </el-form-item>
 
+    <el-form-item label="使用分页">
+      <el-switch
+        v-model="data.__config__.usePagination"
+      >
+      </el-switch>
+    </el-form-item>
     <el-form-item label="固定高度">
       <el-input
         v-model="data.height"
         placeholder="请输入高度"
       />
     </el-form-item>
+
+    <icons-dialog :visible.sync="iconsVisible" :current="currentIcon['icon']" @select="setIcon" />
   </div>
 </template>
 <script>
   import { tableOperateList, tableOperateButton } from '@/components/generator/config'
   import { nanoid } from 'nanoid'
   import { deepClone } from '@/utils/index'
+  import IconsDialog from '../index/IconsDialog'
+
   export default {
     props: {
       data: {
         type: Object
       }
     },
+    components: {
+      IconsDialog
+    },
     data() {
       return {
-        
+        iconsVisible: false,
+        currentIcon: {},
       }
     },
     computed: {
@@ -88,6 +107,14 @@
       },
       deleteBtn(i) {
         this.btnList.splice(i, 1)
+      },
+      clickIcon(item) {
+        this.iconsVisible = true
+        this.currentIcon = item
+      },
+      setIcon(val) {
+        console.log(this.currentIcon)
+        this.currentIcon.icon = val
       }
     }
   }
@@ -103,12 +130,16 @@
     margin-bottom: 10px;
   }
   .btn-name {
-    width: 110px;
+    width: 55%;
+    margin-right: 15px
   }
   .name {
-    width: 130px;
+    width: 110px;
   }
-  .el-icon-edit, .el-icon-delete {
+  .cursor-point, .el-icon-delete {
     cursor: pointer;
+  }
+  .el-icon-delete {
+    margin-left: 5px;
   }
 </style>

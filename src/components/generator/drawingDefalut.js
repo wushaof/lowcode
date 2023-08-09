@@ -3,15 +3,14 @@ export default [
     __config__: {
       label: '单行文本',
       labelWidth: null,
+      compType: 'text',
       showLabel: true,
-      changeTag: true,
       tag: 'el-input',
       tagIcon: 'input',
       defaultValue: undefined,
       required: true,
       layout: 'colFormItem',
       span: 24,
-      document: 'https://element.eleme.cn/#/zh-CN/component/input',
       // 正则校验规则
       regList: [{
         pattern: '/^1(3|4|5|7|8|9)\\d{9}$/',

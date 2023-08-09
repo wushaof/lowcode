@@ -1,6 +1,7 @@
 <script>
 import draggable from 'vuedraggable'
 import render from '@/components/render/render'
+import { pagination } from '@/components/generator/config'
 
 const components = {
   itemBtns(h, currentItem, index, list) {
@@ -23,6 +24,12 @@ const layouts = {
   colFormItem(h, currentItem, index, list) {
     const { activeItem } = this.$listeners
     const config = currentItem.__config__
+    console.log(config)
+
+    // 表格使用分页逻辑
+    if (config.usePagination) {
+      
+    }
     const child = renderChildren.apply(this, arguments)
     let className = this.activeId === config.formId ? 'drawing-item active-from-item' : 'drawing-item'
     if (this.formConf.unFocusedComponentBorder) className += ' unfocus-bordered'
@@ -30,7 +37,7 @@ const layouts = {
     if (config.showLabel === false) labelWidth = '0'
     return (
       <el-col span={config.span} class={className}
-        nativeOnClick={event => { activeItem(currentItem); event.stopPropagation() }}>
+        nativeOnClick={event => { activeItem(currentItem); event.stopPropagation(); }}>
         <el-form-item label-width={labelWidth}
           label={config.showLabel ? config.label : ''} required={config.required}>
           <render key={config.renderKey} conf={currentItem} onInput={ event => {
@@ -38,6 +45,13 @@ const layouts = {
           }}>
             {child}
           </render>
+          {/* 表格使用分页 */}
+          {config.usePagination &&
+            <render key={pagination.renderKey} conf={pagination} onCurrentChange={ event => {
+              console.log('------表格分页------') 
+            }}/>
+          }
+
         </el-form-item>
         {components.itemBtns.apply(this, arguments)}
       </el-col>
@@ -108,6 +122,9 @@ export default {
     'activeId',
     'formConf'
   ],
+  created() {
+    console.log('组件created')
+  },
   render(h) {
     const layout = layouts[this.currentItem.__config__.layout]
 

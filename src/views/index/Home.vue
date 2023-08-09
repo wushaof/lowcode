@@ -41,18 +41,18 @@
 
     <div class="center-board">
       <div class="action-bar">
-        <el-button icon="el-icon-video-play" type="text" @click="run">
+        <!-- <el-button icon="el-icon-video-play" type="text" @click="run">
           运行
-        </el-button>
+        </el-button> -->
         <el-button icon="el-icon-view" type="text" @click="showJson">
           查看json
         </el-button>
-        <el-button icon="el-icon-download" type="text" @click="download">
+        <!-- <el-button icon="el-icon-download" type="text" @click="download">
           导出vue文件
-        </el-button>
-        <el-button class="copy-btn-main" icon="el-icon-document-copy" type="text" @click="copy">
+        </el-button> -->
+        <!-- <el-button class="copy-btn-main" icon="el-icon-document-copy" type="text" @click="copy">
           复制代码
-        </el-button>
+        </el-button> -->
         <el-button class="delete-btn" icon="el-icon-delete" type="text" @click="empty">
           清空
         </el-button>
@@ -65,7 +65,7 @@
             :disabled="formConf.disabled"
             :label-width="formConf.labelWidth + 'px'"
           >
-            <draggable class="drawing-board" :list="drawingList" :animation="340" group="componentsGroup">
+            <draggable class="drawing-board" :list="drawingList" :animation="340" group="componentsGroup" @click.native="clickPage">
               <draggable-item
                 v-for="(item, index) in drawingList"
                 :key="item.renderKey"
@@ -91,7 +91,6 @@
       :active-data="activeData"
       :form-conf="formConf"
       :show-field="!!drawingList.length"
-      @tag-change="tagChange"
       @fetch-data="fetchData"
     />
 
@@ -255,6 +254,10 @@ export default {
     })
   },
   methods: {
+    // 点击页面
+    clickPage() {
+      this.activeData = this.formConf
+    },
     setObjectValueReduce(obj, strKeys, data) {
       const arr = strKeys.split('.')
       arr.reduce((pre, item, i) => {
@@ -413,26 +416,6 @@ export default {
       this.dialogVisible = true
       this.showFileName = false
       this.operationType = 'copy'
-    },
-    tagChange(newTag) {
-      newTag = this.cloneComponent(newTag)
-      const config = newTag.__config__
-      newTag.__vModel__ = this.activeData.__vModel__
-      config.formId = this.activeId
-      config.span = this.activeData.__config__.span
-      this.activeData.__config__.tag = config.tag
-      this.activeData.__config__.tagIcon = config.tagIcon
-      this.activeData.__config__.document = config.document
-      if (typeof this.activeData.__config__.defaultValue === typeof config.defaultValue) {
-        config.defaultValue = this.activeData.__config__.defaultValue
-      }
-      Object.keys(newTag).forEach(key => {
-        if (this.activeData[key] !== undefined) {
-          newTag[key] = this.activeData[key]
-        }
-      })
-      this.activeData = newTag
-      this.updateDrawingList(newTag, this.drawingList)
     },
     updateDrawingList(newTag, list) {
       const index = list.findIndex(item => item.__config__.formId === this.activeId)
