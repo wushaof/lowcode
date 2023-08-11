@@ -3,7 +3,6 @@
     <div class="left-board">
       <div class="logo-wrapper">
         <div class="logo">
-          <img :src="logo" alt="logo">
         </div>
       </div>
       <el-scrollbar class="left-scrollbar">
@@ -44,6 +43,9 @@
         <!-- <el-button icon="el-icon-video-play" type="text" @click="run">
           运行
         </el-button> -->
+        <el-button icon="el-icon-view" type="text" @click="preview">
+          预览
+        </el-button>
         <el-button icon="el-icon-view" type="text" @click="showJson">
           查看json
         </el-button>
@@ -113,6 +115,16 @@
       @confirm="generate"
     />
     <input id="copyNode" type="hidden">
+
+    <el-dialog
+      class="preview-dialog"
+      width="70%"
+      :visible.sync="previewDialogVisible"
+      :close-on-click-modal="false"
+      :modal-append-to-body="false"
+    >
+      <Parser :formConf="formData"/>
+    </el-dialog>
   </div>
 </template>
 
@@ -138,13 +150,14 @@ import {
 import { makeUpJs } from '@/components/generator/js'
 import { makeUpCss } from '@/components/generator/css'
 import drawingDefalut from '@/components/generator/drawingDefalut'
-import logo from '@/assets/logo.png'
 import CodeTypeDialog from './CodeTypeDialog'
 import DraggableItem from './DraggableItem'
 import {
   getDrawingList, saveDrawingList, saveIdGlobal, getFormConf
 } from '@/utils/db'
 import loadBeautifier from '@/utils/loadBeautifier'
+import Parser from '@/components/parser/Parser'
+import { mapActions } from 'vuex'
 
 let beautifier
 let oldActiveId
@@ -160,11 +173,11 @@ export default {
     JsonDrawer,
     RightPanel,
     CodeTypeDialog,
-    DraggableItem
+    DraggableItem,
+    Parser
   },
   data() {
     return {
-      logo,
       formConf,
       inputComponents,
       selectComponents,
@@ -195,7 +208,8 @@ export default {
           title: '布局型组件',
           list: layoutComponents
         }
-      ]
+      ],
+      previewDialogVisible: false,
     }
   },
   computed: {
@@ -221,6 +235,7 @@ export default {
     drawingList: {
       handler(val) {
         this.saveDrawingListDebounce(val)
+        this.updateFormData(val)
       },
       deep: true
     },
@@ -254,6 +269,11 @@ export default {
     })
   },
   methods: {
+    ...mapActions('formDesign', ['updateFormData']),
+    preview() {
+      this.AssembleFormData()
+      this.previewDialogVisible = true
+    },
     // 点击页面
     clickPage() {
       this.activeData = this.formConf
@@ -438,4 +458,7 @@ export default {
 
 <style lang='scss'>
 @import '@/styles/home';
+.preview-dialog {
+  height: 80%;
+}
 </style>

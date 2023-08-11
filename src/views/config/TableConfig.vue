@@ -26,7 +26,6 @@
               placeholder="请输入图标"
               @click.native="clickIcon(item)"
             />
-            <!-- <i class="cursor-point" :class="item.icon" @click="clickIcon(item)"></i> -->
             <i class="el-icon-delete" @click="deleteBtn(index)"></i>
           </div>
         </template>
@@ -38,9 +37,15 @@
     <el-form-item label="使用分页">
       <el-switch
         v-model="data.__config__.usePagination"
-      >
-      </el-switch>
+      />
     </el-form-item>
+    <!-- <el-form-item label="每页展示" v-if="data.__config__.usePagination">
+      <el-input
+        placeholder="请输入条数"
+        style="width: 60px"
+      />
+      &nbsp;条
+    </el-form-item> -->
     <el-form-item label="固定高度">
       <el-input
         v-model="data.height"

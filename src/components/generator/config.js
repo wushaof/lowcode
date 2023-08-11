@@ -13,7 +13,7 @@ export const formConf = {
   gutter: 15,
   disabled: false,
   span: 24,
-  formBtns: true
+  formBtns: false,
 }
 
 // 分页
@@ -29,8 +29,8 @@ export const pagination = {
     showLabel: false,
     labelWidth: null,
   },
-  layout: 'prev, pager, next',
-  total: 50,
+  layout: 'total, sizes, prev, pager, next, jumper',
+  total: 400,
   on: {
     'current-change': function(){}
   }
@@ -570,6 +570,10 @@ export const layoutComponents = [
       tagIcon: 'button',
       span: 24,
       layout: 'colFormItem',
+      event: {
+        click: [],
+        load: []
+      },
     },
     __slot__: {
       default: '主要按钮'

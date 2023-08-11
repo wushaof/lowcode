@@ -579,6 +579,8 @@
         </el-form>
         <!-- 表单属性 -->
         <FormAttrs v-if="currentTab === 'form'" :formConf="formConf"/>
+        <!-- 事件 -->
+        <Events v-if="currentTab === 'event'" :formConf="formConf" :activeData="activeData"/>
       </el-scrollbar>
     </div>
 
@@ -594,6 +596,7 @@ import IconsDialog from './IconsDialog'
 import { saveFormConf } from '@/utils/db'
 import TableConfig from '../config/TableConfig'
 import FormAttrs from '../config/FormAttrs'
+import Events from '../config/Events.vue'
 
 const dateTimeFormat = {
   date: 'yyyy-MM-dd',
@@ -630,6 +633,7 @@ export default {
     IconsDialog,
     TableConfig,
     FormAttrs,
+    Events,
   },
   props: ['showField', 'activeData', 'formConf'],
   data() {

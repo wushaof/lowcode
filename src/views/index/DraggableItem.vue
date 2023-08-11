@@ -2,6 +2,7 @@
 import draggable from 'vuedraggable'
 import render from '@/components/render/render'
 import { pagination } from '@/components/generator/config'
+import { eventSystem }  from '@/events'
 
 const components = {
   itemBtns(h, currentItem, index, list) {
@@ -24,7 +25,6 @@ const layouts = {
   colFormItem(h, currentItem, index, list) {
     const { activeItem } = this.$listeners
     const config = currentItem.__config__
-    console.log(config)
 
     // 表格使用分页逻辑
     if (config.usePagination) {
@@ -42,6 +42,8 @@ const layouts = {
           label={config.showLabel ? config.label : ''} required={config.required}>
           <render key={config.renderKey} conf={currentItem} onInput={ event => {
             this.$set(config, 'defaultValue', event)
+          }} nativeOnClick={event => {
+            eventSystem.call(this, 'click', currentItem, event)
           }}>
             {child}
           </render>
@@ -123,7 +125,10 @@ export default {
     'formConf'
   ],
   created() {
-    console.log('组件created')
+    this.$nextTick(() => {
+      // 组件加载完成触发的事件
+      eventSystem.call(this, 'load', this.currentItem)
+    })
   },
   render(h) {
     const layout = layouts[this.currentItem.__config__.layout]
@@ -135,3 +140,4 @@ export default {
   }
 }
 </script>
+
