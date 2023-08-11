@@ -21,27 +21,36 @@
           </el-tab-pane>
         </el-tabs>
       </el-tab-pane>
+
       <el-tab-pane label="自定义事件" name="custom">
 
-        <el-tabs tab-position="left" type="border-card" style="height: 500px;">
-          <el-tab-pane
-            v-for="(item, index) in internalEvent"
-            :key="index"
-            :label="item.label">
-            <!-- 提交表单 -->
-            <div v-if="item.type === 'submitForm'">
-              <el-select v-model="formIds" multiple size="mini" @change="changeForm">
-                <el-option
-                  v-for="(item, index) in formList"
-                  :key="index"
-                  :label="item.name"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
+        <div class="el-tabs el-tabs--left el-tabs--border-card" style="height: 500px;">
+          <div class="el-tabs__header is-left">
+            <div class="el-tabs__nav-wrap is-left">
+              <div class="el-tabs__nav-scroll">
+                <div role="tablist" class="el-tabs__nav is-left" style="transform: translateY(0px);">
+                  <div
+                    class="el-tabs__item is-left"
+                    v-for="(item, index) in customEvent"
+                    :key="index"
+                  >
+                    {{ item.label }}
+                  </div>
+                </div>
+              </div>
             </div>
-          </el-tab-pane>
-        </el-tabs>
-        
+          </div>
+
+          <div class="el-tabs__content">
+            <EditorMonaco
+              v-if="activeName === 'custom'"
+              :str-val="event.val"
+              :data.sync="event.val"
+              language="javascript"
+            />
+          </div>
+        </div>
+
       </el-tab-pane>
     </el-tabs>
     <div class="event-name">
@@ -54,7 +63,10 @@
   import { nanoid } from 'nanoid'
   import { mapState } from 'vuex'
   import { deepClone } from '@/utils/index'
-  import { internalEvent } from './const'
+  import { internalEvent, customEvent } from './const'
+  import ClipboardJS from 'clipboard'
+  import EditorMonaco from './EditorMonaco'
+
 
   export default {
     props: {
@@ -62,9 +74,9 @@
         type: Object,
         default: () => {}
       },
-      data: {
-        type: Object
-      }
+    },
+    components: {
+      EditorMonaco,
     },
     computed: {
       ...mapState('formDesign', ['formData']),
@@ -79,8 +91,11 @@
     },
     watch: {
       event: {
-        handler(v) {
-          this.$emit('update:data', v)
+        handler(val) {
+          this.$emit('update:data', {
+            type: this.activeName,
+            val
+          })
         },
         deep: true
       }
@@ -90,16 +105,36 @@
         activeName: 'internal',
         eventName: '',
         internalEvent,
+        customEvent,
         formIds: [],
         event: {},
+        customEventIndex: '',
+        editorVal: '',
       }
     },
     created() {
       this.event = deepClone(this.eventItem)
       // this.internalEvent.
-      if (this.event.type === 'submitForm') {
-        this.formIds = this.event.val
+      switch(this.event.type) {
+        case 'submitForm':
+          this.formIds = this.event.val
+          break
+        case 'custom':
+          this.activeName = 'custom'
+          break
       }
+    },
+    mounted() {
+      const clipboard = new ClipboardJS('.copy-json-btn', {
+        text: trigger => {
+          this.$notify({
+            title: '成功',
+            message: '代码已复制到剪切板，可粘贴。',
+            type: 'success'
+          })
+          return 'aagagagaga'
+        }
+      })
     },
     methods: {
       // 提交表单

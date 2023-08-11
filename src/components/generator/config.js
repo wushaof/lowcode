@@ -35,7 +35,7 @@ export const pagination = {
     'current-change': function(){}
   }
 }
-// 表格操作列按钮
+// 列表操作列按钮
 export const tableOperateButton = {
   __config__: {
     tag: 'el-button',
@@ -51,7 +51,7 @@ export const tableOperateButton = {
   round: false,
   size: 'medium'
 }
-// 表格操作列
+// 列表操作列
 export const tableOperateList = {
   __config__: {
     layout: 'raw',
@@ -82,7 +82,12 @@ export const inputComponents = [
       layout: 'colFormItem',
       span: 24,
       // 正则校验规则
-      regList: []
+      regList: [],
+      event: {
+        click: [],
+        load: [],
+        change: []
+      },
     },
     // 组件的插槽属性
     __slot__: {
@@ -113,6 +118,11 @@ export const inputComponents = [
       layout: 'colFormItem',
       span: 24,
       regList: [],
+      event: {
+        click: [],
+        load: [],
+        change: []
+      },
     },
     type: 'textarea',
     placeholder: '请输入',
@@ -168,6 +178,11 @@ export const inputComponents = [
       layout: 'colFormItem',
       required: true,
       regList: [],
+      event: {
+        click: [],
+        load: [],
+        change: []
+      },
     },
     placeholder: '',
     min: undefined,
@@ -191,6 +206,11 @@ export const inputComponents = [
       layout: 'colFormItem',
       required: true,
       regList: [],
+      event: {
+        click: [],
+        load: [],
+        change: []
+      },
     },
     placeholder: '请输入',
     height: 300, // 编辑器高度
@@ -212,6 +232,11 @@ export const selectComponents = [
       span: 24,
       required: true,
       regList: [],
+      event: {
+        click: [],
+        load: [],
+        change: []
+      },
     },
     __slot__: {
       options: [{
@@ -247,6 +272,11 @@ export const selectComponents = [
       span: 24,
       required: true,
       regList: [],
+      event: {
+        click: [],
+        load: [],
+        change: []
+      },
     },
     options: [{
       id: 1,
@@ -289,6 +319,11 @@ export const selectComponents = [
       regList: [],
       required: true,
       border: false,
+      event: {
+        click: [],
+        load: [],
+        change: []
+      },
     },
     __slot__: {
       options: [{
@@ -318,6 +353,11 @@ export const selectComponents = [
       required: true,
       regList: [],
       border: false,
+      event: {
+        click: [],
+        load: [],
+        change: []
+      },
     },
     __slot__: {
       options: [{
@@ -347,6 +387,11 @@ export const selectComponents = [
       layout: 'colFormItem',
       required: true,
       regList: [],
+      event: {
+        click: [],
+        load: [],
+        change: []
+      },
     },
     style: {},
     disabled: false,
@@ -369,6 +414,11 @@ export const selectComponents = [
       layout: 'colFormItem',
       labelWidth: null,
       required: true,
+      event: {
+        click: [],
+        load: [],
+        change: []
+      },
       regList: [],
     },
     disabled: false,
@@ -391,6 +441,11 @@ export const selectComponents = [
       labelWidth: null,
       required: true,
       regList: [],
+      event: {
+        click: [],
+        load: [],
+        change: []
+      },
     },
     placeholder: '请选择',
     style: { width: '100%' },
@@ -415,6 +470,11 @@ export const selectComponents = [
       defaultValue: null,
       required: true,
       regList: [],
+      event: {
+        click: [],
+        load: [],
+        change: []
+      },
     },
     style: { width: '100%' },
     disabled: false,
@@ -439,6 +499,11 @@ export const selectComponents = [
       layout: 'colFormItem',
       required: true,
       regList: [],
+      event: {
+        click: [],
+        load: [],
+        change: []
+      },
     },
     placeholder: '请选择',
     type: 'date',
@@ -462,6 +527,11 @@ export const selectComponents = [
       required: true,
       layout: 'colFormItem',
       regList: [],
+      event: {
+        click: [],
+        load: [],
+        change: []
+      },
     },
     style: { width: '100%' },
     type: 'daterange',
@@ -487,6 +557,11 @@ export const selectComponents = [
       layout: 'colFormItem',
       required: true,
       regList: [],
+      event: {
+        click: [],
+        load: [],
+        change: []
+      },
     },
     style: {},
     max: 5,
@@ -508,6 +583,11 @@ export const selectComponents = [
       layout: 'colFormItem',
       required: true,
       regList: [],
+      event: {
+        click: [],
+        load: [],
+        change: []
+      },
     },
     'show-alpha': false,
     'color-format': '',
@@ -531,6 +611,10 @@ export const selectComponents = [
       regList: [],
       fileSize: 2,
       sizeUnit: 'MB',
+      event: {
+        click: [],
+        load: [],
+      },
     },
     __slot__: {
       'list-type': true
@@ -572,7 +656,7 @@ export const layoutComponents = [
       layout: 'colFormItem',
       event: {
         click: [],
-        load: []
+        load: [],
       },
     },
     __slot__: {
@@ -598,7 +682,7 @@ export const layoutComponents = [
       componentName: 'row101',
       showLabel: false,
       labelWidth: null,
-      label: '表格',
+      label: '列表',
       useOperate: true,
       usePagination: true,
       dataType: 'dynamic',

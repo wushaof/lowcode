@@ -34,7 +34,11 @@
       :close-on-click-modal="false"
       :modal-append-to-body="false"
     >
-      <EventAction :eventItem="currentEvent" :eventStatus="eventStatus" :data.sync="getEvent"/>
+      <EventAction
+        :eventItem="currentEvent"
+        :eventStatus="eventStatus"
+        :data.sync="getEvent"
+      />
       <span slot="footer" class="dialog-footer">
         <el-button @click="closeDialog">取 消</el-button>
         <el-button type="primary" @click="confirm">确 定</el-button>
@@ -44,6 +48,8 @@
 </template>
 <script>
   import EventAction from './EventAction.vue'
+  import { deepClone } from '@/utils/index'
+import { nanoid } from 'nanoid'
   export default {
     props: ['activeData', 'formConf'],
     components: {
@@ -64,7 +70,8 @@
         collapseActive: ['click', 'load'],
         eventMap: {
           click: '点击触发',
-          load: '加载触发'
+          load: '加载触发',
+          change: '数据改变触发'
         },
         currentEvent: {},
         eventStatus: 'add',
@@ -98,11 +105,19 @@
       },
       confirm() {
         const event = this.collapseList[this.eventIndex]
+        console.log(this.getEvent)
+        let eventItem = deepClone(this.getEvent) 
+        if (eventItem.type ===  'custom') {
+          eventItem.val.type = 'custom'
+        }
         if (this.eventStatus === 'add') {
-          event.push(this.getEvent)
+          event.push({
+            ...eventItem.val,
+            id: nanoid(5)
+          })
         } else {
           Object.assign(event[this.editIndex], {
-            ...this.getEvent
+            ...eventItem.val
           })
         }
         this.currentEvent = {}
@@ -120,6 +135,9 @@
 <style scoped>
   .cursor {
     cursor: pointer;
+  }
+  .el-icon-edit {
+    margin-right: 10px;
   }
   .event-container {
     display: flex;

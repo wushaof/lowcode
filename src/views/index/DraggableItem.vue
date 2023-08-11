@@ -125,6 +125,8 @@ export default {
     'formConf'
   ],
   created() {
+  },
+  mounted() {
     this.$nextTick(() => {
       // 组件加载完成触发的事件
       eventSystem.call(this, 'load', this.currentItem)

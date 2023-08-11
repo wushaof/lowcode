@@ -24,3 +24,14 @@ export const internalEvent = [
   //   type: ''
   // }
 ]
+
+export const customEvent = [
+  {
+    label: '获取当前组件模型',
+    type: 'compModel'
+  },
+  {
+    label: '获取当前组件模型',
+    type: 'compModel'
+  }
+]
