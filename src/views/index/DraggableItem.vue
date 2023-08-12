@@ -26,6 +26,17 @@ const layouts = {
     const { activeItem } = this.$listeners
     const config = currentItem.__config__
 
+    // 表单赋值，模拟表单渲染时的数据，配置页面调试使用
+    function setValue(event, config, item) {
+      const formModel = this.formConf.formModel + 'TEST'
+      if (!this.formConf[formModel]) {
+        this.$set(this.formConf, formModel, {})
+      }
+      console.log('表单数据---', this.formConf[formModel])
+
+      this.$set(this.formConf[formModel], item.__vModel__, event)
+    }
+
     // 表格使用分页逻辑
     if (config.usePagination) {
       
@@ -42,6 +53,9 @@ const layouts = {
           label={config.showLabel ? config.label : ''} required={config.required}>
           <render key={config.renderKey} conf={currentItem} onInput={ event => {
             this.$set(config, 'defaultValue', event)
+            setValue.call(this, event, config, currentItem)
+            eventSystem.call(this, 'change', currentItem, event)
+
           }} nativeOnClick={event => {
             eventSystem.call(this, 'click', currentItem, event)
           }}>
@@ -124,6 +138,10 @@ export default {
     'activeId',
     'formConf'
   ],
+  data() {
+    return {
+    }
+  },
   created() {
   },
   mounted() {
@@ -134,7 +152,11 @@ export default {
   },
   render(h) {
     const layout = layouts[this.currentItem.__config__.layout]
-
+    
+    // 动作隐藏组件
+    if (!this.currentItem.__config__.show) {
+      return null
+    }
     if (layout) {
       return layout.call(this, h, this.currentItem, this.index, this.drawingList)
     }

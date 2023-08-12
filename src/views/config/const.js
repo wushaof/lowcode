@@ -11,10 +11,10 @@ export const internalEvent = [
     label: '打开页面',
     type: 'openPage'
   },
-  // {
-  //   label: '',
-  //   type: ''
-  // },
+  {
+    label: '组件显隐',
+    type: 'compShowHide'
+  },
   // {
   //   label: '',
   //   type: ''
@@ -27,11 +27,38 @@ export const internalEvent = [
 
 export const customEvent = [
   {
-    label: '获取当前组件模型',
-    type: 'compModel'
+    label: '获取当前组件实例',
+    type: 'context'
   },
   {
-    label: '获取当前组件模型',
-    type: 'compModel'
+    label: '获取当前事件参数',
+    type: 'params'
+  }
+]
+
+export const identifier = [
+  {
+    label: '等于',
+    value: '=='
+  },
+  {
+    label: '大于',
+    value: '>'
+  },
+  {
+    label: '小于',
+    value: '<'
+  },
+  {
+    label: '不等于',
+    value: '!='
+  },
+  {
+    label: '有值',
+    value: 'hasVal'
+  },
+  {
+    label: '没有值',
+    value: 'null'
   }
 ]

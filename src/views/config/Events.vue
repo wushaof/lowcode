@@ -3,7 +3,7 @@
     <div v-if="compType === 'page'">
     </div>
     <div v-else>
-      <el-collapse v-model="collapseActive" @change="collapseChange">
+      <el-collapse v-model="collapseActive">
         <el-collapse-item
           v-for="(events, key) of collapseList"
           :key="key"
@@ -67,7 +67,7 @@ import { nanoid } from 'nanoid'
     data() {
       return {
         visible: false,
-        collapseActive: ['click', 'load'],
+        collapseActive: ['click', 'load', 'change'],
         eventMap: {
           click: '点击触发',
           load: '加载触发',
@@ -105,7 +105,6 @@ import { nanoid } from 'nanoid'
       },
       confirm() {
         const event = this.collapseList[this.eventIndex]
-        console.log(this.getEvent)
         let eventItem = deepClone(this.getEvent) 
         if (eventItem.type ===  'custom') {
           eventItem.val.type = 'custom'
@@ -126,9 +125,6 @@ import { nanoid } from 'nanoid'
       closeDialog() {
         this.visible = false
       },
-      collapseChange(val) {
-        console.log(val)
-      }
     }
   }
 </script>
