@@ -657,11 +657,20 @@ export const layoutComponents = [
       compType: 'row',
       label: '行容器',
       layoutTree: true,
-      document: 'https://element.eleme.cn/#/zh-CN/component/layout#row-attributes'
     },
     type: 'default',
     justify: 'start',
     align: 'top'
+  },
+  {
+    __config__: {
+      layout: 'rowFormItem',
+      tagIcon: 'row',
+      show: true,
+      compType: 'grid',
+      label: '栅格',
+      layoutTree: true,
+    },
   },
   {
     __config__: {

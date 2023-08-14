@@ -76,20 +76,23 @@ const layouts = {
   rowFormItem(h, currentItem, index, list) {
     const { activeItem } = this.$listeners
     const config = currentItem.__config__
+    console.log('行容器', currentItem)
     const className = this.activeId === config.formId
       ? 'drawing-row-item active-from-item'
       : 'drawing-row-item'
     let child = renderChildren.apply(this, arguments)
+
+    // 行容器使用
     if (currentItem.type === 'flex') {
       child = <el-row type={currentItem.type} justify={currentItem.justify} align={currentItem.align}>
               {child}
             </el-row>
     }
+
     return (
       <el-col span={config.span}>
         <el-row gutter={config.gutter} class={className}
           nativeOnClick={event => { activeItem(currentItem); event.stopPropagation() }}>
-          <span class="component-name">{config.componentName}</span>
           <draggable list={config.children || []} animation={340}
             group="componentsGroup" class="drag-wrapper">
             {child}

@@ -356,7 +356,7 @@ export default {
       if (config.layout === 'colFormItem') {
         item.__vModel__ = `field${id}`
       } else if (config.layout === 'rowFormItem') {
-        config.componentName = `row${id}`
+        config.componentName = `${config.compType}${id}`
         !Array.isArray(config.children) && (config.children = [])
         delete config.label // rowFormItem无需配置label属性
       }
