@@ -34,29 +34,26 @@ function getFunction(eventList, self) {
         const formFields = self.drawingList
         const formModel = self.formConf.formModel + 'TEST'
         const formData = self.formConf[formModel]
-        console.log(formData)
+        console.log('显隐----', event.val)
         // const self
         const conditions = event.val.conditions
         conditions.map(condition => {
-          console.log(condition)
           const rules = condition.rules
-          const rights = condition.rights
-          rules.some(rule => {
-            console.log(rule)
+          // 遍历所有规则，是否都满足
+          const isAllRulesOk = rules.some(rule => {
             const field = formFields.find(v => v.__config__.formId === rule.formId)
             const value = formData[field.__vModel__]
-            console.log(field)
-            if (rule.symbol === '==') {
-
-                Object.keys(rights).map(formId => {
-                  formFields.map(v => {
-                    if (v.__config__.formId === formId) {
-                      v.__config__.show = rule.val == value
-                    }
-                  })
-                })
-            }
+            
+            const isRuleOk = eval(`rule.val${rule.symbol}value`)
+            return isRuleOk
           })
+          const actions = condition.actions
+          Object.keys(actions).map(formId => {
+            const field = formFields.find(v => v.__config__.formId === formId)
+            // 满足规则后开始执行目标行为
+            field.__config__.show = isAllRulesOk ? actions[formId] : !actions[formId]
+          })
+
         })
         break
     }

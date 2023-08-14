@@ -69,7 +69,7 @@
 
       <el-divider></el-divider>
     </section>
-    <el-button type="text" icon="el-icon-plus" @click="addCondition">添加条件</el-button>
+    <el-button type="text" icon="el-icon-plus" :disabled="event.val.conditions.length >= 1" @click="addCondition">添加条件</el-button>
 
   </div>
 </template>
@@ -109,7 +109,7 @@
         this.event.val.conditions.push({
           name: '',
           fields: [],
-          rights: {},
+          actions: {},
           rules: [{
             formId: '',
             symbol: '',

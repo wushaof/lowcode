@@ -31,8 +31,8 @@
                     </span>
                   </el-col>
                   <el-col :span="10">
-                    <el-radio v-model="condition.rights[item.formId]" :label="true">显示</el-radio>
-                    <el-radio v-model="condition.rights[item.formId]" :label="false">隐藏</el-radio>
+                    <el-radio v-model="condition.actions[item.formId]" :label="true">显示</el-radio>
+                    <el-radio v-model="condition.actions[item.formId]" :label="false">隐藏</el-radio>
                   </el-col>
                   <el-col :span="6">
                     <i class="el-icon-delete cursor" @click="deleteComp(idx, index)"></i>
@@ -173,7 +173,7 @@
         const condition = this.event.val.conditions[index]
         condition.fields.map(v => {
           if (!condition.hasOwnProperty(v)) {
-            this.$set(condition.rights, v, true)
+            this.$set(condition.actions, v, true)
           }
         })
       },
