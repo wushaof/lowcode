@@ -3,22 +3,22 @@
     <!-- 外边距容器 -->
     <div class="margin-container">
       <el-input
-        v-model="layout.marginLeft"
+        v-model="styles.marginLeft"
         size="mini"
         class="card-layout-input left"
       />
       <el-input
-        v-model="layout.marginTop"
+        v-model="styles.marginTop"
         size="mini"
         class="card-layout-input top"
       />
       <el-input
-        v-model="layout.marginBottom"
+        v-model="styles.marginBottom"
         size="mini"
         class="card-layout-input bottom"
       />
       <el-input
-        v-model="layout.marginRight"
+        v-model="styles.marginRight"
         size="mini"
         class="card-layout-input right"
       />
@@ -27,22 +27,22 @@
       <!-- 内边距容器 -->
       <div v-if="showPadding" class="padding-container">
         <el-input
-          v-model="layout.paddingLeft"
+          v-model="styles.paddingLeft"
           size="mini"
           class="card-layout-input left"
         />
         <el-input
-          v-model="layout.paddingTop"
+          v-model="styles.paddingTop"
           size="mini"
           class="card-layout-input top"
         />
         <el-input
-          v-model="layout.paddingBottom"
+          v-model="styles.paddingBottom"
           size="mini"
           class="card-layout-input bottom"
         />
         <el-input
-          v-model="layout.paddingRight"
+          v-model="styles.paddingRight"
           size="mini"
           class="card-layout-input right"
         />
@@ -62,12 +62,9 @@
  */
 export default {
   props: {
-    layout: {
+    styles: {
       type: Object,
-      default: () => ({
-        marginTop: '10',
-        marginLeft: '10'
-      })
+      default: () => ({})
     },
     showPadding: {
       type: Boolean,
@@ -75,27 +72,11 @@ export default {
     },
   },
   data() {
-    return {
-      bindValue: {
-        marginRight: "0",
-        marginLeft: "0",
-        marginBottom: "0",
-        marginTop: "0",
-        paddingTop: "0",
-        paddingBottom: "0",
-        paddingLeft: "0",
-        paddingRight: "0",
-      },
-    };
+    return {}
   },
   created() {
   },
   methods: {
-    format(keyName, val) {
-      this.bindValue[keyName] = val;
-      const style = this.bindValue;
-      style[keyName] = val;
-    },
   },
 };
 </script>

@@ -4,6 +4,16 @@ import render from '@/components/render/render'
 import { pagination } from '@/components/generator/config'
 import { eventSystem }  from '@/events'
 
+// 获取布局样式
+const getStyles = (config) => {
+  const _style = config.styles || {}
+  let styles = {}
+  Object.keys(_style).map(k => {
+    const num = (config.styles)[k] || 0
+    styles[k] = num + 'px'
+  })
+  return styles
+}
 const components = {
   itemBtns(h, currentItem, index, list) {
     const { copyItem, deleteItem } = this.$listeners
@@ -81,12 +91,13 @@ const layouts = {
       : 'drawing-row-item'
     let child = renderChildren.apply(this, arguments)
 
+    // 布局样式
+    let styles = getStyles(config)
     //  栅格布局
     if (config.compType === 'grid') {
       const ratio = config.ratio.split(':')
-
       return (
-        <div class={[className, 'grid-container']} onClick={event => { activeItem(currentItem); event.stopPropagation() }}>
+        <div class={[className, 'grid-container']} style={{...styles}} onClick={event => { activeItem(currentItem); event.stopPropagation() }}>
           <el-row gutter={config.gutter} >
             {ratio.map((_span, idx) => {
 
@@ -96,8 +107,10 @@ const layouts = {
               ? 'grid-item active-grid-item'
               : 'grid-item'
 
+              styles = getStyles(config.children[idx].__config__)
+              
               return (
-                <el-col span={_span*1} nativeOnClick={event => { activeItem(config.children[idx]); event.stopPropagation() }}>
+                <el-col span={_span*1} style={{...styles}} nativeOnClick={event => { activeItem(config.children[idx]); event.stopPropagation() }}>
                   <draggable list={config.children[idx].__config__.children || []} animation={340}
                     group="componentsGroup" class={['drag-wrapper drawing-row-item border-none', className1]}>
                     {gridChild}

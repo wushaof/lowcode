@@ -560,9 +560,9 @@
 
           <template>
             <el-divider>样式</el-divider>
-            <Layout/>
+            <Layout :styles="activeData.__config__.styles"/>
           </template>
-          
+
           <template v-if="Array.isArray(activeData.__config__.regList)">
             <el-divider>正则校验</el-divider>
             <div

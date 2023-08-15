@@ -22,6 +22,7 @@ export const gridItem = {
     layout: 'rowFormItem',
     tagIcon: 'row',
     compType: 'gridItem',
+    styles: {},
     show: true,
     children: [],
   }
@@ -99,10 +100,8 @@ export const inputComponents = [
         load: [],
         change: []
       },
-      styles: {
-        marginTop: '10',
-        marginLeft: '10'
-      }
+      // 样式布局
+      styles: {}
     },
     // 组件的插槽属性
     __slot__: {
@@ -686,6 +685,7 @@ export const layoutComponents = [
       ratio: '12:12',
       gutter: 0,
       layoutTree: true,
+      styles: {},
       children: [
         gridItem,
         gridItem
