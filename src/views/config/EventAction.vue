@@ -153,7 +153,6 @@
       if (this.event.type !== 'custom') {
         this.internalActive = this.event.type || 'submitForm'
       }
-      console.log(this.event)
       // this.internalEvent.
       switch(this.event.type) {
         case 'submitForm':
@@ -169,7 +168,6 @@
     methods: {
       // 选择组件时触发，增加默认配置数据
       changeFields(index) {
-        console.log(this.event.val.conditions[index])
         const condition = this.event.val.conditions[index]
         condition.fields.map(v => {
           if (!condition.hasOwnProperty(v)) {

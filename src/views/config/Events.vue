@@ -1,6 +1,27 @@
 <template>
   <div>
     <div v-if="compType === 'page'">
+
+      <!-- 页面的事件 -->
+      <el-collapse v-model="collapseActive" v-if="formConf.__config__.event">
+        <el-collapse-item
+          v-for="(events, key) of formConf.__config__.event"
+          :key="key"
+          :title="eventMap[key]"
+          :name="key"
+        >
+          <div v-for="(item) in events" :key="item.id" class="event-container">
+            <span>{{ item.eventName }}</span>
+
+            <div>
+              <i class="el-icon-edit cursor" @click="editEvent(item, key, events)"></i>
+              <i class="el-icon-delete cursor" @click="deleteEvent(item.id, events)"></i>
+            </div>
+          </div>
+          <el-button type="text" icon="el-icon-plus" @click="addEvent(key)">添加</el-button>
+          
+        </el-collapse-item>
+      </el-collapse>
     </div>
     <div v-else>
       <el-collapse v-model="collapseActive" v-if="collapseList">
@@ -63,7 +84,7 @@ import { nanoid } from 'nanoid'
       },
       collapseList() {
         return this.activeData.__config__.event
-      }
+      },
     },
     data() {
       return {

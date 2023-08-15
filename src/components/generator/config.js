@@ -3,6 +3,9 @@ import { nanoid } from 'nanoid'
 export const formConf = {
   __config__: {
     compType: 'page',
+    event: {
+      load: []
+    }
   },
   formRef: 'elForm',
   formModel: 'formData',

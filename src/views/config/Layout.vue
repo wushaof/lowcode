@@ -4,16 +4,19 @@
     <div class="margin-container">
       <el-input
         v-model="styles.marginLeft"
+        type="number"
         size="mini"
         class="card-layout-input left"
       />
       <el-input
         v-model="styles.marginTop"
+        type="number"
         size="mini"
         class="card-layout-input top"
       />
       <el-input
         v-model="styles.marginBottom"
+        type="number"
         size="mini"
         class="card-layout-input bottom"
       />
@@ -28,21 +31,25 @@
       <div v-if="showPadding" class="padding-container">
         <el-input
           v-model="styles.paddingLeft"
+          type="number"
           size="mini"
           class="card-layout-input left"
         />
         <el-input
           v-model="styles.paddingTop"
+          type="number"
           size="mini"
           class="card-layout-input top"
         />
         <el-input
           v-model="styles.paddingBottom"
+          type="number"
           size="mini"
           class="card-layout-input bottom"
         />
         <el-input
           v-model="styles.paddingRight"
+          type="number"
           size="mini"
           class="card-layout-input right"
         />
@@ -82,6 +89,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+::v-deep input::-webkit-outer-spin-button,
+::v-deep input::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+}
+::v-deep input[type='number'] {
+  -moz-appearance: textfield !important;
+}
 .p-layout {
   .margin-container {
     border: 1px dashed #bfc3cb;

@@ -780,7 +780,6 @@ export default {
   },
   methods: {
     handleGrid() {
-      console.log(this.activeData)
       const config = this.activeData.__config__
       const ratio = config.ratio.split(':')
       ratio.map((_span, idx) => {

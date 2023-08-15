@@ -167,6 +167,7 @@ import {
 import loadBeautifier from '@/utils/loadBeautifier'
 import Parser from '@/components/parser/Parser'
 import { mapActions } from 'vuex'
+import { eventSystem }  from '@/events'
 
 let beautifier
 let oldActiveId
@@ -300,6 +301,9 @@ export default {
     })
     clipboard.on('error', e => {
       this.$message.error('代码复制失败')
+    })
+    this.$nextTick(() => {
+      eventSystem.call(this, 'load', this.formConf)
     })
   },
   methods: {
