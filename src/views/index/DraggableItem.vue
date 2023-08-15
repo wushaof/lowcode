@@ -47,6 +47,8 @@ const layouts = {
       this.$set(this.formConf[formModel], item.__vModel__, event)
     }
 
+    let styles = getStyles(config)
+
     // 表格使用分页逻辑
     if (config.usePagination) {
       
@@ -59,7 +61,7 @@ const layouts = {
     return (
       <el-col span={config.span} class={[className, 'row-form']}
         nativeOnClick={event => { activeItem(currentItem); event.stopPropagation(); }}>
-        <el-form-item label-width={labelWidth}
+        <el-form-item label-width={labelWidth} style={{...styles}}
           label={config.showLabel ? config.label : ''} required={config.required}>
           <render key={config.renderKey} conf={currentItem} onInput={ event => {
             this.$set(config, 'defaultValue', event)
@@ -108,7 +110,7 @@ const layouts = {
               : 'grid-item'
 
               styles = getStyles(config.children[idx].__config__)
-              
+
               return (
                 <el-col span={_span*1} style={{...styles}} nativeOnClick={event => { activeItem(config.children[idx]); event.stopPropagation() }}>
                   <draggable list={config.children[idx].__config__.children || []} animation={340}
@@ -133,7 +135,7 @@ const layouts = {
 
     return (
       <el-col span={config.span}>
-        <el-row gutter={config.gutter} class={className}
+        <el-row gutter={config.gutter} class={className} style={{...styles}}
           nativeOnClick={event => { activeItem(currentItem); event.stopPropagation() }}>
           <draggable list={config.children || []} animation={340}
             group="componentsGroup" class="drag-wrapper">
