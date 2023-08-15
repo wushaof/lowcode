@@ -47,7 +47,7 @@ const layouts = {
     let labelWidth = config.labelWidth ? `${config.labelWidth}px` : null
     if (config.showLabel === false) labelWidth = '0'
     return (
-      <el-col span={config.span} class={className}
+      <el-col span={config.span} class={[className, 'row-form']}
         nativeOnClick={event => { activeItem(currentItem); event.stopPropagation(); }}>
         <el-form-item label-width={labelWidth}
           label={config.showLabel ? config.label : ''} required={config.required}>
@@ -85,30 +85,27 @@ const layouts = {
     if (config.compType === 'grid') {
       const ratio = config.ratio.split(':')
 
-      console.log(config)
       return (
         <div class={[className, 'grid-container']} onClick={event => { activeItem(currentItem); event.stopPropagation() }}>
-          {ratio.map((_span, idx) => {
+          <el-row gutter={config.gutter} >
+            {ratio.map((_span, idx) => {
 
-            const gridChild = renderChildren.call(this, h, config.children[idx])
+              const gridChild = renderChildren.call(this, h, config.children[idx])
 
+              const className1 = this.activeId === config.children[idx].__config__.formId
+              ? 'active-from-item'
+              : ''
 
-            const className1 = this.activeId === config.children[idx].__config__.formId
-            ? 'drawing-row-item active-from-item'
-            : 'drawing-row-item'
-
-            return (
-              <el-col span={_span*1} class={className1}>
-                <el-row gutter={config.gutter}
-                  nativeOnClick={event => { activeItem(config.children[idx]); event.stopPropagation() }}>
+              return (
+                <el-col span={_span*1} nativeOnClick={event => { activeItem(config.children[idx]); event.stopPropagation() }}>
                   <draggable list={config.children[idx].__config__.children || []} animation={340}
-                    group="componentsGroup" class="drag-wrapper">
+                    group="componentsGroup" class={['drag-wrapper drawing-row-item', className1]}>
                     {gridChild}
                   </draggable>
-                </el-row>
-              </el-col>
-            )
-          })}
+                </el-col>
+              )
+            })}
+          </el-row>
           {components.itemBtns.call(this, h, config, index, list)}
         </div>
       )
@@ -200,4 +197,9 @@ export default {
   }
 }
 </script>
-
+<style scoped>
+  ::v-deep .row-form {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+</style>
