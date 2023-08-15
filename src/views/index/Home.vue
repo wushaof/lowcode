@@ -35,7 +35,16 @@
             </draggable>
           </div>
         </div>
+        <div class="components-title" style="padding: 8px;">
+          <svg-icon icon-class="component" />
+          组件树
+          <el-tree
+            :data="treeData"
+            @node-click="handleNodeClick"
+          ></el-tree>
+        </div>
       </el-scrollbar>
+
     </div>
 
     <div class="center-board">
@@ -213,6 +222,31 @@ export default {
     }
   },
   computed: {
+    treeData() {
+      function handleData(list) {
+        return list.map(v => {
+          const obj = {
+            label: (v.__config__.label || '') + v.__config__.formId,
+            formId: v.__config__.formId
+          }
+          if (v.__config__.children) {
+            obj.children = handleData(v.__config__.children)
+          }
+          return obj
+        })
+      }
+      return handleData(this.drawingList)
+    },
+    // 扁平当前表单列表，方便查找
+    flatList() {
+      function flat(list) {
+        return list.reduce((pre, cur) => {
+          const child = cur.__config__.children
+          return child ? pre.concat(flat(child), cur) : pre.concat(cur)
+        }, [])
+      }
+      return flat(this.drawingList)
+    }
   },
   watch: {
     // eslint-disable-next-line func-names
@@ -270,6 +304,10 @@ export default {
   },
   methods: {
     ...mapActions('formDesign', ['updateFormData']),
+    handleNodeClick(data) {
+      const activeData = this.flatList.find(v => v.__config__.formId === data.formId)
+      this.activeFormItem(activeData)
+    },
     preview() {
       this.AssembleFormData()
       this.previewDialogVisible = true

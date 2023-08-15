@@ -329,7 +329,7 @@
               <el-input
                 v-model="activeData.__config__.ratio"
                 placeholder="请录入栅格比例"
-                style="margin-left: 20px"
+                style="margin-left: 20px; width: calc(100% - 24px);"
                 @input="handleGrid"
               />
               <el-tooltip content="请录入分隔比例，以英文冒号分隔，总份数为24，比例相加
@@ -339,10 +339,10 @@
             </el-form-item>
 
             <el-form-item label="分栏间隔">
-              <el-input
+              <el-input-number
                 v-model.number="activeData.__config__.gutter"
                 placeholder="请输入分栏间隔"
-              ></el-input>
+              ></el-input-number>
             </el-form-item>
           </template>
 
@@ -558,6 +558,11 @@
             <el-switch v-model="activeData.__config__.required" />
           </el-form-item>
 
+          <template>
+            <el-divider>样式</el-divider>
+            <Layout/>
+          </template>
+          
           <template v-if="Array.isArray(activeData.__config__.regList)">
             <el-divider>正则校验</el-divider>
             <div
@@ -602,6 +607,7 @@ import { saveFormConf } from '@/utils/db'
 import TableConfig from '../config/TableConfig'
 import FormAttrs from '../config/FormAttrs'
 import Events from '../config/Events.vue'
+import Layout from '../config/Layout.vue'
 import { gridItem } from '@/components/generator/config'
 import { createIdAndKey } from '@/components/generator/handleForm'
 
@@ -641,6 +647,7 @@ export default {
     TableConfig,
     FormAttrs,
     Events,
+    Layout,
   },
   props: ['showField', 'activeData', 'formConf'],
   data() {

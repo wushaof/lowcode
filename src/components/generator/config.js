@@ -99,6 +99,10 @@ export const inputComponents = [
         load: [],
         change: []
       },
+      styles: {
+        marginTop: '10',
+        marginLeft: '10'
+      }
     },
     // 组件的插槽属性
     __slot__: {
