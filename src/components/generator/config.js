@@ -16,6 +16,16 @@ export const formConf = {
   formBtns: false,
 }
 
+// 栅格子元素，分栏
+export const gridItem = {
+  __config__: {
+    layout: 'rowFormItem',
+    tagIcon: 'row',
+    compType: 'gridItem',
+    show: true,
+    children: [],
+  }
+}
 // 分页
 export const pagination = {
   __config__: {
@@ -669,7 +679,13 @@ export const layoutComponents = [
       show: true,
       compType: 'grid',
       label: '栅格',
+      ratio: '12:12',
+      gutter: 0,
       layoutTree: true,
+      children: [
+        gridItem,
+        gridItem
+      ]
     },
   },
   {

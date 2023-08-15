@@ -60,7 +60,7 @@
         </el-button>
       </div>
       <el-scrollbar class="center-scrollbar">
-        <el-row class="center-board-row" :gutter="formConf.gutter">
+        <el-row class="center-board-row">
           <el-form
             :size="formConf.size"
             :label-position="formConf.labelPosition"
@@ -139,7 +139,7 @@ import FormDrawer from './FormDrawer'
 import JsonDrawer from './JsonDrawer'
 import RightPanel from './RightPanel'
 import {
-  inputComponents, selectComponents, layoutComponents, formConf
+  inputComponents, selectComponents, layoutComponents, formConf, gridItem
 } from '@/components/generator/config'
 import {
   exportDefault, beautifierConf, isNumberStr, titleCase, deepClone, isObjectObject
@@ -346,6 +346,8 @@ export default {
       this.createIdAndKey(clone)
       clone.placeholder !== undefined && (clone.placeholder += config.label)
       tempActiveData = clone
+
+
       return tempActiveData
     },
     createIdAndKey(item) {
@@ -358,6 +360,17 @@ export default {
       } else if (config.layout === 'rowFormItem') {
         config.componentName = `${config.compType}${id}`
         !Array.isArray(config.children) && (config.children = [])
+
+        if (config.ratio) {
+          const ratio = config.ratio.split(':')
+          ratio.map((_span, idx) => {
+            // 栅格增加默认分栏
+            if (!config.children[idx]) {
+              config.children[idx] = gridItem
+            }
+          })
+        }
+
         delete config.label // rowFormItem无需配置label属性
       }
       if (Array.isArray(config.children)) {
@@ -460,5 +473,10 @@ export default {
 @import '@/styles/home';
 .preview-dialog {
   height: 80%;
+}
+.grid-container::after {
+  content: '';
+  display: block;
+  clear: both;
 }
 </style>

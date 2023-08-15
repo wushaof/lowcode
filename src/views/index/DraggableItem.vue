@@ -76,11 +76,43 @@ const layouts = {
   rowFormItem(h, currentItem, index, list) {
     const { activeItem } = this.$listeners
     const config = currentItem.__config__
-    console.log('行容器', currentItem)
     const className = this.activeId === config.formId
       ? 'drawing-row-item active-from-item'
       : 'drawing-row-item'
     let child = renderChildren.apply(this, arguments)
+
+    //  栅格布局
+    if (config.compType === 'grid') {
+      const ratio = config.ratio.split(':')
+
+      console.log(config)
+      return (
+        <div class={[className, 'grid-container']} onClick={event => { activeItem(currentItem); event.stopPropagation() }}>
+          {ratio.map((_span, idx) => {
+
+            const gridChild = renderChildren.call(this, h, config.children[idx])
+
+
+            const className1 = this.activeId === config.children[idx].__config__.formId
+            ? 'drawing-row-item active-from-item'
+            : 'drawing-row-item'
+
+            return (
+              <el-col span={_span*1} class={className1}>
+                <el-row gutter={config.gutter}
+                  nativeOnClick={event => { activeItem(config.children[idx]); event.stopPropagation() }}>
+                  <draggable list={config.children[idx].__config__.children || []} animation={340}
+                    group="componentsGroup" class="drag-wrapper">
+                    {gridChild}
+                  </draggable>
+                </el-row>
+              </el-col>
+            )
+          })}
+          {components.itemBtns.call(this, h, config, index, list)}
+        </div>
+      )
+    }
 
     // 行容器使用
     if (currentItem.type === 'flex') {
@@ -114,6 +146,7 @@ const layouts = {
 }
 
 function renderChildren(h, currentItem, index, list) {
+  console.log(currentItem)
   const config = currentItem.__config__
   if (!Array.isArray(config.children)) return null
   return config.children.map((el, i) => {

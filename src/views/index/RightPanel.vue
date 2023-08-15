@@ -30,7 +30,7 @@
           <el-form-item v-if="activeData['end-placeholder']!==undefined" label="结束占位">
             <el-input v-model="activeData['end-placeholder']" placeholder="请输入占位提示" />
           </el-form-item>
-          <el-form-item v-if="activeData.__config__.span!==undefined" label="表单栅格">
+          <el-form-item v-if="activeData.__config__.span!==undefined && !['grid', 'gridItem'].includes(activeData.__config__.compType)" label="表单栅格">
             <el-slider v-model="activeData.__config__.span" :max="24" :min="1" :marks="{12:''}" @change="spanChange" />
           </el-form-item>
           <el-form-item v-if="activeData.__config__.layout==='rowFormItem'&&activeData.gutter!==undefined" label="栅格间隔">
@@ -322,6 +322,29 @@
             </div>
             <el-divider />
           </template>
+         
+          <!-- 栅格 -->
+          <template v-if="activeData.__config__.compType === 'grid'">
+            <el-form-item label="栅格比例">
+              <el-input
+                v-model="activeData.__config__.ratio"
+                placeholder="请录入栅格比例"
+                style="margin-left: 20px"
+                @input="handleGrid"
+              />
+              <el-tooltip content="请录入分隔比例，以英文冒号分隔，总份数为24，比例相加
+              之和必须为24，比如12:12，6:18，8:8:8等。" placement="top">
+                <i class="el-icon-warning-outline" style="position: absolute; left: 0; top: 10px;"></i>
+              </el-tooltip>
+            </el-form-item>
+
+            <el-form-item label="分栏间隔">
+              <el-input
+                v-model.number="activeData.__config__.gutter"
+                placeholder="请输入分栏间隔"
+              ></el-input>
+            </el-form-item>
+          </template>
 
           <template v-if="['el-cascader', 'el-table'].includes(activeData.__config__.tag)">
             <el-divider>选项</el-divider>
@@ -597,6 +620,7 @@ import { saveFormConf } from '@/utils/db'
 import TableConfig from '../config/TableConfig'
 import FormAttrs from '../config/FormAttrs'
 import Events from '../config/Events.vue'
+import { gridItem } from '@/components/generator/config'
 
 const dateTimeFormat = {
   date: 'yyyy-MM-dd',
@@ -726,6 +750,7 @@ export default {
       ],
       layoutTreeProps: {
         label(data, node) {
+          console.log(data)
           const config = data.__config__
           return data.componentName || `${config.label}: ${data.__vModel__}`
         }
@@ -771,6 +796,16 @@ export default {
     }
   },
   methods: {
+    handleGrid() {
+      console.log(this.activeData)
+      const config = this.activeData.__config__
+      const ratio = config.ratio.split(':')
+      ratio.map((_span, idx) => {
+        if (!config.children[idx]) {
+          config.children[idx] = gridItem
+        }
+      })
+    },
     addReg() {
       this.activeData.__config__.regList.push({
         pattern: '',
