@@ -3,7 +3,7 @@
     <div v-if="compType === 'page'">
     </div>
     <div v-else>
-      <el-collapse v-model="collapseActive">
+      <el-collapse v-model="collapseActive" v-if="collapseList">
         <el-collapse-item
           v-for="(events, key) of collapseList"
           :key="key"
@@ -22,6 +22,7 @@
           
         </el-collapse-item>
       </el-collapse>
+      <div v-else style="text-align: center;">暂不支持</div>
     </div>
 
     <el-dialog

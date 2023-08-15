@@ -558,24 +558,6 @@
             <el-switch v-model="activeData.__config__.required" />
           </el-form-item>
 
-          <template v-if="activeData.__config__.layoutTree">
-            <el-divider>布局结构树</el-divider>
-            <el-tree
-              :data="[activeData.__config__]"
-              :props="layoutTreeProps"
-              node-key="renderKey"
-              default-expand-all
-              draggable
-            >
-              <span slot-scope="{ node, data }">
-                <span class="node-label">
-                  <svg-icon class="node-icon" :icon-class="data.__config__?data.__config__.tagIcon:data.tagIcon" />
-                  {{ node.label }}
-                </span>
-              </span>
-            </el-tree>
-          </template>
-
           <template v-if="Array.isArray(activeData.__config__.regList)">
             <el-divider>正则校验</el-divider>
             <div
@@ -614,13 +596,14 @@
 
 <script>
 import TreeNodeDialog from '@/views/index/TreeNodeDialog'
-import { isNumberStr } from '@/utils/index'
+import { isNumberStr, deepClone } from '@/utils/index'
 import IconsDialog from './IconsDialog'
 import { saveFormConf } from '@/utils/db'
 import TableConfig from '../config/TableConfig'
 import FormAttrs from '../config/FormAttrs'
 import Events from '../config/Events.vue'
 import { gridItem } from '@/components/generator/config'
+import { createIdAndKey } from '@/components/generator/handleForm'
 
 const dateTimeFormat = {
   date: 'yyyy-MM-dd',
@@ -748,13 +731,6 @@ export default {
           value: 'space-between'
         }
       ],
-      layoutTreeProps: {
-        label(data, node) {
-          console.log(data)
-          const config = data.__config__
-          return data.componentName || `${config.label}: ${data.__vModel__}`
-        }
-      }
     }
   },
   computed: {
@@ -802,7 +778,7 @@ export default {
       const ratio = config.ratio.split(':')
       ratio.map((_span, idx) => {
         if (!config.children[idx]) {
-          config.children[idx] = gridItem
+          config.children[idx] = createIdAndKey(deepClone(gridItem))
         }
       })
     },

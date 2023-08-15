@@ -129,7 +129,6 @@
 </template>
 
 <script>
-import { nanoid } from 'nanoid'
 import draggable from 'vuedraggable'
 import { debounce } from 'throttle-debounce'
 import { saveAs } from 'file-saver'
@@ -141,6 +140,7 @@ import RightPanel from './RightPanel'
 import {
   inputComponents, selectComponents, layoutComponents, formConf, gridItem
 } from '@/components/generator/config'
+import { createIdAndKey } from '@/components/generator/handleForm'
 import {
   exportDefault, beautifierConf, isNumberStr, titleCase, deepClone, isObjectObject
 } from '@/utils/index'
@@ -343,40 +343,12 @@ export default {
       const clone = deepClone(origin)
       const config = clone.__config__
       config.span = this.formConf.span // 生成代码时，会根据span做精简判断
-      this.createIdAndKey(clone)
+      createIdAndKey(clone)
       clone.placeholder !== undefined && (clone.placeholder += config.label)
       tempActiveData = clone
 
 
       return tempActiveData
-    },
-    createIdAndKey(item) {
-      const config = item.__config__
-      const id = nanoid(5)
-      config.formId = (config.compType || '') + id
-      config.renderKey = `${id}${+new Date()}` // 改变renderKey后可以实现强制更新组件
-      if (config.layout === 'colFormItem') {
-        item.__vModel__ = `field${id}`
-      } else if (config.layout === 'rowFormItem') {
-        config.componentName = `${config.compType}${id}`
-        !Array.isArray(config.children) && (config.children = [])
-
-        if (config.ratio) {
-          const ratio = config.ratio.split(':')
-          ratio.map((_span, idx) => {
-            // 栅格增加默认分栏
-            if (!config.children[idx]) {
-              config.children[idx] = gridItem
-            }
-          })
-        }
-
-        delete config.label // rowFormItem无需配置label属性
-      }
-      if (Array.isArray(config.children)) {
-        config.children = config.children.map(childItem => this.createIdAndKey(childItem))
-      }
-      return item
     },
     AssembleFormData() {
       this.formData = {
@@ -410,7 +382,7 @@ export default {
     },
     drawingItemCopy(item, list) {
       let clone = deepClone(item)
-      clone = this.createIdAndKey(clone)
+      clone = createIdAndKey(clone)
       list.push(clone)
       this.activeFormItem(clone)
     },

@@ -93,13 +93,13 @@ const layouts = {
               const gridChild = renderChildren.call(this, h, config.children[idx])
 
               const className1 = this.activeId === config.children[idx].__config__.formId
-              ? 'active-from-item'
-              : ''
+              ? 'grid-item active-grid-item'
+              : 'grid-item'
 
               return (
                 <el-col span={_span*1} nativeOnClick={event => { activeItem(config.children[idx]); event.stopPropagation() }}>
                   <draggable list={config.children[idx].__config__.children || []} animation={340}
-                    group="componentsGroup" class={['drag-wrapper drawing-row-item', className1]}>
+                    group="componentsGroup" class={['drag-wrapper drawing-row-item border-none', className1]}>
                     {gridChild}
                   </draggable>
                 </el-col>
@@ -143,7 +143,6 @@ const layouts = {
 }
 
 function renderChildren(h, currentItem, index, list) {
-  console.log(currentItem)
   const config = currentItem.__config__
   if (!Array.isArray(config.children)) return null
   return config.children.map((el, i) => {
@@ -201,5 +200,19 @@ export default {
   ::v-deep .row-form {
     padding-left: 0 !important;
     padding-right: 0 !important;
+  }
+  .border-none {
+    border: none;
+  }
+  .active-grid-item.grid-item {
+    border: 1px dashed #409EFF;
+  }
+  .grid-item {
+    border: 1px dashed #ccc;
+  }
+  .grid-item::after {
+    content: '';
+    display: block;
+    clear: both;
   }
 </style>
