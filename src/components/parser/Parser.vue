@@ -1,6 +1,9 @@
 <script>
 import { deepClone } from '@/utils/index'
 import render from '@/components/render/render.js'
+import { getStyles } from '@/components/generator/handleForm'
+import { eventSystem }  from '@/events'
+import { pagination } from '@/components/generator/config'
 
 const ruleTrigger = {
   'el-input': 'blur',
@@ -17,21 +20,62 @@ const ruleTrigger = {
 const layouts = {
   colFormItem(h, scheme) {
     const config = scheme.__config__
-    const listeners = buildListeners.call(this, scheme)
+    const listeners = buildListeners.call(this, scheme, 'on')
+    const nativeListeners = buildListeners.call(this, scheme, 'nativeOn')
+    const child = renderChildren.apply(this, arguments)
+    let styles = getStyles(config)
 
     let labelWidth = config.labelWidth ? `${config.labelWidth}px` : null
     if (config.showLabel === false) labelWidth = '0'
     return (
       <el-col span={config.span}>
-        <el-form-item label-width={labelWidth} prop={scheme.__vModel__}
+        <el-form-item
+          style={{...styles}}
+          label-width={labelWidth}
+          prop={scheme.__vModel__}
           label={config.showLabel ? config.label : ''}>
-          <render conf={scheme} on={listeners} />
+          <render conf={scheme} on={listeners} nativeOn={nativeListeners}>
+            {child}
+          </render>
+          {/* 表格使用分页 */}
+          {config.usePagination &&
+            <render key={pagination.renderKey} conf={pagination} onCurrentChange={ event => {
+              console.log('------表格分页------') 
+            }}/>
+          }
         </el-form-item>
       </el-col>
     )
   },
-  rowFormItem(h, scheme) {
+  rowFormItem(h, scheme, index, list) {
     let child = renderChildren.apply(this, arguments)
+    const config = scheme.__config__
+    let styles = getStyles(config)
+    // 栅格布局
+    if (config.compType === 'grid') {
+      const ratio = config.ratio.split(':')
+      return (
+        <div class='grid-container' style={{...styles}}>
+          <el-row gutter={config.gutter} >
+            {ratio.map((_span, idx) => {
+
+              const gridChild = renderChildren.call(this, h, config.children[idx])
+
+              styles = getStyles(config.children[idx].__config__)
+
+              return (
+                <el-col span={_span*1} style={{...styles}}>
+                  <draggable disabled={true} list={config.children[idx].__config__.children || []} animation={340}
+                    group="componentsGroup" class={['drag-wrapper grid-item']}>
+                    {gridChild}
+                  </draggable>
+                </el-col>
+              )
+            })}
+          </el-row>
+        </div>
+      )
+    }
     if (scheme.type === 'flex') {
       child = <el-row type={scheme.type} justify={scheme.justify} align={scheme.align}>
               {child}
@@ -44,6 +88,15 @@ const layouts = {
         </el-row>
       </el-col>
     )
+  },
+  raw(h, scheme, index, list) {
+    const config = scheme.__config__
+    const child = renderChildren.apply(this, arguments)
+    return <render key={config.renderKey} conf={scheme} onInput={ event => {
+      this.$set(config, 'defaultValue', event)
+    }}>
+      {child}
+    </render>
   }
 }
 
@@ -79,12 +132,12 @@ function formBtns(h) {
 }
 
 function renderFormItem(h, elementList) {
-  return elementList.map(scheme => {
+  return elementList.map((scheme, index) => {
     const config = scheme.__config__
     const layout = layouts[config.layout]
 
     if (layout) {
-      return layout.call(this, h, scheme)
+      return layout.call(this, h, scheme, index, elementList)
     }
     throw new Error(`没有与${config.layout}匹配的layout`)
   })
@@ -97,22 +150,34 @@ function renderChildren(h, scheme) {
 }
 
 function setValue(event, config, scheme) {
+  console.log('设置值---', config, this[this.formConf.formModel])
   this.$set(config, 'defaultValue', event)
   this.$set(this[this.formConf.formModel], scheme.__vModel__, event)
+  // 数据改变时触发的事件
+  eventSystem.call(this, 'change', scheme)
+
 }
 
-function buildListeners(scheme) {
+// 事件处理
+function buildListeners(scheme, type) {
   const config = scheme.__config__
   const methods = this.formConf.__methods__ || {}
   const listeners = {}
 
-  // 给__methods__中的方法绑定this和event
-  Object.keys(methods).forEach(key => {
-    listeners[key] = event => methods[key].call(this, event)
-  })
-  // 响应 render.js 中的 vModel $emit('input', val)
-  listeners.input = event => setValue.call(this, event, config, scheme)
-
+  // 事件监听
+  if (type === 'on') {
+    // 给__methods__中的方法绑定this和event
+    Object.keys(methods).forEach(key => {
+      listeners[key] = event => methods[key].call(this, event)
+    })
+    // 响应 render.js 中的 vModel $emit('input', val)
+    listeners.input = event => setValue.call(this, event, config, scheme)
+  } else if (type === 'nativeOn') {
+    // 仅用于组件，监听原生事件
+    listeners.click = () => {
+      eventSystem.call(this, 'click', scheme)
+    }
+  }
   return listeners
 }
 
@@ -184,3 +249,20 @@ export default {
   }
 }
 </script>
+<style scoped>
+  ::v-deep .row-form {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  .grid-item .el-form-item {
+    margin-bottom: 0;
+  }
+  .grid-item::after {
+    content: '';
+    display: block;
+    clear: both;
+  }
+  .el-form-item {
+    margin-bottom: 0;
+  }
+</style>

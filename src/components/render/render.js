@@ -1,4 +1,5 @@
 import { deepClone } from '@/utils/index'
+import { eventSystem }  from '@/events'
 
 const componentChild = {}
 /**
@@ -111,6 +112,12 @@ export default {
       type: Object,
       required: true
     }
+  },
+  mounted() {
+    this.$nextTick(() => {
+      // 组件加载完成触发的事件
+      eventSystem.call(this, 'load', this.conf)
+    })
   },
   render(h) {
     const dataObject = makeDataObject()

@@ -3,8 +3,12 @@
     <el-drawer v-bind="$attrs" v-on="$listeners" @opened="onOpen" @close="onClose">
       <div class="action-bar" :style="{'text-align': 'left'}">
         <span class="bar-btn" @click="refresh">
-          <i class="el-icon-refresh" />
-          刷新
+          <el-tooltip class="item" effect="light" content="！谨慎操作，会覆盖原有数据" placement="top-start">
+            <span>
+              <i class="el-icon-refresh" />
+              保存
+            </span>
+          </el-tooltip>
         </span>
         <span ref="copyBtn" class="bar-btn copy-json-btn">
           <i class="el-icon-document-copy" />

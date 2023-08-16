@@ -128,6 +128,8 @@
     <el-dialog
       class="preview-dialog"
       width="70%"
+      title="预览"
+      v-if="previewDialogVisible"
       :visible.sync="previewDialogVisible"
       :close-on-click-modal="false"
       :modal-append-to-body="false"
@@ -485,8 +487,9 @@ export default {
 
 <style lang='scss'>
 @import '@/styles/home';
-.preview-dialog {
+.preview-dialog .el-dialog {
   height: 80%;
+  margin-top: 8% !important;
 }
 .grid-container::after {
   content: '';

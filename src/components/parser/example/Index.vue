@@ -10,9 +10,12 @@
 
 <script>
 import Parser from '../Parser'
-
+import {
+  getFormConf
+} from '@/utils/db'
 // 若parser是通过安装npm方式集成到项目中的，使用此行引入
 // import Parser from 'form-gen-parser'
+const formConfInDB = getFormConf()
 
 export default {
   components: {
@@ -264,17 +267,21 @@ export default {
   watch: {},
   created() {},
   mounted() {
+    console.log(formConfInDB)
+    if (formConfInDB) {
+      this.formConf = formConfInDB
+    }
     // 表单数据回填，模拟异步请求场景
-    setTimeout(() => {
-      // 请求回来的表单数据
-      const data = {
-        mobile: '18836662555'
-      }
-      // 回填数据
-      this.fillFormData(this.formConf, data)
-      // 更新表单
-      this.key2 = +new Date()
-    }, 2000)
+    // setTimeout(() => {
+    //   // 请求回来的表单数据
+    //   const data = {
+    //     mobile: '18836662555'
+    //   }
+    //   // 回填数据
+    //   this.fillFormData(this.formConf, data)
+    //   // 更新表单
+    //   this.key2 = +new Date()
+    // }, 2000)
   },
   methods: {
     fillFormData(form, data) {

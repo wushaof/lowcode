@@ -78,13 +78,6 @@ export default {
       default: true,
     },
   },
-  data() {
-    return {}
-  },
-  created() {
-  },
-  methods: {
-  },
 };
 </script>
 

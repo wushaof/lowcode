@@ -2,18 +2,10 @@
 import draggable from 'vuedraggable'
 import render from '@/components/render/render'
 import { pagination } from '@/components/generator/config'
+import { getStyles } from '@/components/generator/handleForm'
 import { eventSystem }  from '@/events'
 
-// 获取布局样式
-const getStyles = (config) => {
-  const _style = config.styles || {}
-  let styles = {}
-  Object.keys(_style).map(k => {
-    const num = (config.styles)[k] || 0
-    styles[k] = num + 'px'
-  })
-  return styles
-}
+
 const components = {
   itemBtns(h, currentItem, index, list) {
     const { copyItem, deleteItem } = this.$listeners
@@ -193,6 +185,7 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
+      console.log('加载', this.currentItem)
       // 组件加载完成触发的事件
       eventSystem.call(this, 'load', this.currentItem)
     })

@@ -92,7 +92,7 @@ import { nanoid } from 'nanoid'
         collapseActive: ['click', 'load', 'change'],
         eventMap: {
           click: '点击触发',
-          load: '加载触发',
+          load: '加载完触发',
           change: '数据改变触发'
         },
         currentEvent: {},
